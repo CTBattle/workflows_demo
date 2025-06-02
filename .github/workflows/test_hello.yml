@@ -1,31 +1,27 @@
-name: Hello Test Python Versions
+name: Test Hello World Script
 
-on: push
+on:
+  push:
+  pull_request:
 
 jobs:
-  hello-test-python-versions:
-    strategy:
-      matrix:
-        python-version: ['3.7', '3.8']
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - run: echo "Job automatically triggered by event ${{ github.event_name }}."
-      - run: |
-          echo "Job running on a ${{ runner.os }} server hosted by GitHub."
-          echo "On branch ${{ github.ref }} of repository ${{ github.repository }}."
-      - name: Check out repository code so it can be run by GitHub
+      - name: Checkout code
         uses: actions/checkout@v3
-      - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
-      - name: List files in repository
-        run: |
-          echo "The contents of the repository are:"
-          ls ${{ github.workspace }}
-      - name: Setup Python
-        uses: actions/setup-python@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-      - run: echo "Python has been set up."
-      - name: Run the Python code in helloworld.py
+          python-version: '3.11'
+
+      - name: Install dependencies
         run: |
-          echo "Running Python code"
-          python helloworld.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Hello World script
+        run: python helloworld.py
+
